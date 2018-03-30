@@ -9,9 +9,9 @@ myEXT="EKU=serverAuth,clientAuth"
  
 # Create a variable mySAN to hold all hostnames of the cluster. Note the last server is added separately
 mySAN="SAN=$(for i in {01..10};do printf "dns:usaltapedf%s.aln.experian.com," $i;done) \
-$(for i in {01..20};do printf "dns:usalthdedf%s.aln.experian.com," $i;done) \
-$(for i in {01..04};do printf "dns:usaltdbedf%s.aln.experian.com," $i;done)"
-mySAN="${mySAN}dns:usaltdbedf05.aln.experian.com"
+$(for i in {01..20};do printf "dns:cdh%s.com," $i;done) \
+$(for i in {01..04};do printf "dns:hdp%s.com," $i;done)"
+mySAN="${mySAN}dns:hdp05.com"
  
 # Create server keystore
 keytool -genkeypair -alias $FQDN  -keyalg RSA -keystore "server-keystore.jks" -keysize 2048 -dname \
