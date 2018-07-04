@@ -1,0 +1,4 @@
+val file = sc.textFile("/benchmarks/smoketests/sparksmoketest/input")
+val counts = file.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_ + _)
+counts.saveAsTextFile("/benchmarks/smoketests/sparksmoketest/output/wordcount")
+counts.count()
