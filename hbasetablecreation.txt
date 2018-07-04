@@ -1,0 +1,6 @@
+disable  'smoketest:test'
+drop  'smoketest:test'
+create_namespace 'smoketest'
+create 'smoketest:test', 'result'
+put 'smoketest:test', 'r1', 'result', 'hbasetest'
+get 'smoketest:test', 'r1',{COLUMN => ['result']}
