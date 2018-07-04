@@ -6,7 +6,7 @@ mkdir -p $path/logs
 report=$path/report/smoke_test_report.out
 hdfs_smoke_test()
 {
-#kinit -kt $(ls -tr /var/run/cloudera-scm-agent/process/*NODE/hdfs.keytab|tail -1) hdfs/$(hostname -f)@GDC.LOCAL
+#kinit -kt $(ls -tr /var/run/cloudera-scm-agent/process/*NODE/hdfs.keytab|tail -1) hdfs/$(hostname -f)
 hdfs dfs -rmr /benchmarks/smoketests/hdfssmoketest/*
 hdfs dfs -mkdir -p /benchmarks/smoketests/hdfssmoketest/
 hdfs dfs -chmod -R 777 /benchmarks/smoketests/hdfssmoketest
