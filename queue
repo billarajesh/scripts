@@ -9,12 +9,24 @@ SERVICE_NAME=$2
 
 TSQUERY_ENCODED="SELECT+sum(allocated_memory_mb)%2C+sum(allocated_vcores)%2C+sum(apps_ingested_rate)+WHERE+serviceName%3D%22$SERVICE_NAME%22+AND+CATEGORY%3DYARN_POOL"
 format_time=$(date -d "12 hours ago" +%FT%T.%3NZ| sed 's/:/%3A/g')
-curl -k -u tester:tester "https://$CM_HOST:7183/api/v19/timeseries?query=$TSQUERY_ENCODED&from=$format_time&contentType=text%2Fcsv&desiredRollup=RAW&mustUseDesiredRollup=false" > $path/data.txt
+curl -k -u admin:D@t@Fabric1 "https://$CM_HOST:7183/api/v19/timeseries?query=$TSQUERY_ENCODED&from=$format_time&contentType=text%2Fcsv&desiredRollup=RAW&mustUseDesiredRollup=false" > $path/data.txt
 cat $path/data.txt | grep allocated_memory | tr -d '" "'| cut -d ',' -f1,4 --output-delimiter=' '| awk {'print $1" "$2/(1024*1024)'} > $path/mb
 cat $path/data.txt | grep vcores | tr -d '" "'| cut -d ',' -f1,4 --output-delimiter=' '| awk {'print $1" "$2*1'} > $path/vc
-echo "Top 5 Queues Usuage"
+echo "Top 5 Queues Usuage- Normal"
 echo "Queuename MemoryUsage(TB)"
 cat $path/mb  | sort -k 2nr | head -n 5| sed -e "s/([^)]*)/()/g" -e 's/())//g'
+echo  -------------------------------------
+echo "|Top 5 Queues Usuage on Memory based|"
+echo  -------------------------------------
+echo "|Queuename MemoryUsage(TB) Vcores   |"
+echo  -------------------------------------
+join  $path/mb $path/vc |sort -k 2nr | head -n 5| sed -e "s/([^)]*)/()/g" -e 's/())//g'
+echo  ------------------------------------
+echo "|Top 5 Queues Usuage on VCores based|"
+echo  -------------------------------------
+echo "|Queuename MemoryUsage(TB) Vcores   |"
+echo  -------------------------------------
+join  $path/mb $path/vc|sort -k 3nr | head -n 5| sed -e "s/([^)]*)/()/g" -e 's/())//g'
 else
 echo "missing arguments"
 echo "script usage: $0 CM_HOST YARN_SERVICE_NAME"
